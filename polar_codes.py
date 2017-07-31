@@ -11,13 +11,13 @@ def generate_G_N(N):
     B_N = permutation_matrix(N)
 
     # The nth Kronecker product of F_2
-    # Initializing this matrix to a "2d" matrix with only 1 element
+    # Initializing this matrix to a "2D" matrix with only 1 element
     nth_Kronecker_product = np.array([[1]])
     for i in range(n):
         nth_Kronecker_product = np.kron(nth_Kronecker_product, F_2)
 
     # Return B_N * F_2**n
-    return np.dot(B_N, nth_Kronecker_product)
+    return np.dot(B_N, nth_Kronecker_product) % 2
 
 
 # The function generates the bit-reversed permutation matrix.
@@ -31,3 +31,14 @@ def permutation_matrix(N):
 
     return R
 
+
+# This function computes the codeword: x = u * G_N
+# "message" should be a 1D (row) vector.
+def encode(message):
+    # N is the length of the message
+    N = message.size
+    G = generate_G_N(N)
+    codeword = np.dot(message, G) % 2
+    # "codeword" should also be a 1D (row) vector
+
+    return codeword
