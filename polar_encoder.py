@@ -3,12 +3,21 @@
 import numpy as np
 import math
 
+
 def generate_G_N(N):
 
-    F = np.array([1, 0],
-                 [1, 1])
+    n = int(math.log2(N))
+    F_2 = np.array([[1, 0],
+                    [1, 1]])
+    B_N = permutation_matrix(N)
 
-    return
+    nth_Kronecker_product = np.array([[1]], dtype=np.float64)
+    for i in range(n):
+        nth_Kronecker_product = np.kron(nth_Kronecker_product, F_2)
+
+    print(nth_Kronecker_product)
+
+    return np.dot(B_N, nth_Kronecker_product)
 
 
 # Generate the bit-reversed permutation matrix.
