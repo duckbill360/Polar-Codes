@@ -4,12 +4,20 @@
 import polar_codes
 import numpy as np
 
-# G is the generator matrix
-G = polar_codes.generate_G_N(8)
-print(G)
+################ ENCODING ################
+print("------------------ENCODING------------------")
 
-message = np.array([1, 0, 1, 0, 1, 0, 1, 0])
-codeword = polar_codes.encode(message)
+message = np.array([1, 0, 1, 0, 1, 0, 1, 0], dtype=np.float64)
+# G is the generator matrix and the size is specified by the message length.
+G = polar_codes.generate_G_N(message.size)
+print('Generator Matrix:\n', G)
+codeword = polar_codes.encode_message(message)
 
-print(codeword)
+print('Message: \n', message)
+print('Codeword:\n', codeword)
+
+
+################ DECODING ################
+print("\n\n------------------DECODING------------------")
+
 

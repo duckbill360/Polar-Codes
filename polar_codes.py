@@ -3,6 +3,7 @@
 import numpy as np
 
 
+######################## ENCODING ########################
 # This function generates the generator matrix of size N
 def generate_G_N(N):
     n = int(np.log2(N))
@@ -34,7 +35,7 @@ def permutation_matrix(N):
 
 # This function computes the codeword: x = u * G_N
 # "message" should be a 1D (row) vector.
-def encode(message):
+def encode_message(message):
     # N is the length of the message
     N = message.size
     G = generate_G_N(N)
@@ -42,3 +43,7 @@ def encode(message):
     # "codeword" should also be a 1D (row) vector
 
     return codeword
+
+
+######################## DECODING ########################
+
