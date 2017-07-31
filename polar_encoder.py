@@ -12,7 +12,7 @@ def generate_G_N(N):
 
     # The nth Kronecker product of F_2
     # Initializing this matrix to a "2d" matrix with only 1 element
-    nth_Kronecker_product = np.array([[1]], dtype=np.float64)
+    nth_Kronecker_product = np.array([[1]])
     for i in range(n):
         nth_Kronecker_product = np.kron(nth_Kronecker_product, F_2)
 
