@@ -19,7 +19,7 @@ message = message.astype(np.float64)    # convert dtype to float64
 # Determine the frozen set.
 U = [polar_codes.Z_W(i + 1, N, eps=epsilon) for i in range(N)]
 # The parameter i, N for W_N() should be no less than 1
-print(U)
+print('U =', U)
 
 # Encode the message.
 codeword = polar_codes.encode(message)
