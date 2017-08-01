@@ -22,7 +22,6 @@ def Z_W(i, N, eps):
             return pow(Z_W(i // 2, N // 2, eps), 2)
 
 
-
 ######################## ENCODING ########################
 # This function generates the generator matrix of size N
 def generate_G_N(N):
