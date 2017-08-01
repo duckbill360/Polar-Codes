@@ -3,22 +3,31 @@
 import polar_codes
 import numpy as np
 
+############### PARAMETERS ###############
+N = 8   # code length
+epsilon = 0.5   # cross-over probability for a BEC
+R = 0.5    # code rate
+
+
 ################ ENCODING ################
 print("------------------ENCODING------------------")
 
-message = np.array([1, 0, 1, 0, 1, 0, 1, 0], dtype=np.float64)
-N = message.size    # code length
+# Randomly generate a message vector of size N.
+message = np.random.randint(2, size=N)
+message = message.astype(np.float64)    # convert dtype to float64
 
-# G is the generator matrix and the size is specified by the message length.
-G = polar_codes.generate_G_N(N)
+# Determine the frozen set.
+U = [polar_codes.Z_W(i + 1, N, eps=epsilon) for i in range(N)]
+# The parameter i, N for W_N() should be no less than 1
+print(U)
 
-# Show the generator matrix.
-print('Generator Matrix:\n', G)
+# Encode the message.
 codeword = polar_codes.encode_message(message)
 
 # Show the message and the corresponding codeword.
 print('Message: \n', message)
 print('Codeword:\n', codeword)
+
 
 
 ################# CHANNEL ################

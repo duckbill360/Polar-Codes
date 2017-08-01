@@ -1,6 +1,22 @@
 # Polar Encoder Functions
 
 import numpy as np
+from functools import lru_cache
+
+
+################## CHANNEL POLARIZATION ##################
+# This function determines the frozen bit positions.
+# Careful: i and N should be no less than 1.
+@lru_cache(maxsize=None)
+def Z_W(i, N, eps):
+    if i == 1 and N == 1:
+        return eps
+    elif N > 1:
+        if i % 2 == 1:
+            return 2 * Z_W((i + 1) // 2, N // 2, eps) - pow(Z_W((i + 1) // 2, N // 2, eps), 2)
+        elif i % 2 == 0:
+            return pow(Z_W(i // 2, N // 2, eps), 2)
+
 
 
 ######################## ENCODING ########################
@@ -39,6 +55,10 @@ def encode_message(message):
     # N is the length of the message
     N = message.size
     G = generate_G_N(N)
+
+    # Show the generator matrix.
+    print('Generator Matrix:\n', G)
+
     codeword = np.dot(message, G) % 2
     # "codeword" should also be a 1D (row) vector
 
@@ -46,4 +66,6 @@ def encode_message(message):
 
 
 ######################## DECODING ########################
+
+
 
