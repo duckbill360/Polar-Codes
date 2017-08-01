@@ -4,7 +4,7 @@ import polar_codes
 import numpy as np
 
 ############### PARAMETERS ###############
-N = 8   # code length
+N = 8      # code length
 epsilon = 0.5   # cross-over probability for a BEC
 R = 0.5    # code rate
 
@@ -22,7 +22,7 @@ U = [polar_codes.Z_W(i + 1, N, eps=epsilon) for i in range(N)]
 print(U)
 
 # Encode the message.
-codeword = polar_codes.encode_message(message)
+codeword = polar_codes.encode(message)
 
 # Show the message and the corresponding codeword.
 print('Message: \n', message)
