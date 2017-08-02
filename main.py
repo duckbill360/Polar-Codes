@@ -17,12 +17,12 @@ message = polar_codes.random_message_with_frozen_bits(N, R, epsilon)
 U = polar_codes.generate_frozen_set_indexes(N, R, epsilon)
 # Encode the message.
 codeword = polar_codes.encode(message)
+signal = codeword * (-2) + 1
 
 # Show the message and the corresponding codeword.
 print('Message: \n', message)
 print('Codeword:\n', codeword)
-
-
+print('Signal:\n', signal)
 
 ################# CHANNEL ################
 
@@ -31,5 +31,5 @@ print('Codeword:\n', codeword)
 
 ################ DECODING ################
 print("------------------DECODING------------------")
-polar_codes.decode(codeword, 50, U)
+polar_codes.decode(signal, 1, U)
 
