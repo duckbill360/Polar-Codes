@@ -41,7 +41,7 @@ def add_noise(signal, SNR):
 
 ################ DECODING ################
 print("------------------DECODING------------------")
-decoded_message = polar_codes.decode(signal, 30, frozen_indexes, B_N)
+decoded_message = polar_codes.decode(signal, 60, frozen_indexes, B_N)
 
 print('Message: \n', message)
 print('Decoded message: \n', decoded_message)
