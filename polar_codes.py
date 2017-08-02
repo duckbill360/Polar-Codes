@@ -68,14 +68,11 @@ def generate_frozen_set_indexes(N, R, epsilon):
         if U[i] >= threshold:
             index_set.append(i)
 
-    print('Frozen indexes :', index_set)
-
     return index_set
 
 
 # The function generates the bit-reversed permutation matrix.
 def permutation_matrix(N):
-    print('called')
     # Initializing this matrix to an N-by-N all-zero matrix
     R = np.zeros((N, N))
 
