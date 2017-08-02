@@ -7,7 +7,7 @@ import numpy as np
 Times = 10
 N = 1024        # code length
 R = 0.5         # code rate
-epsilon = 0.5   # cross-over probability for a BEC
+epsilon = 0.45   # cross-over probability for a BEC
 SNR_in_db = 1.5
 
 
@@ -33,7 +33,7 @@ print('Signal:\n', signal)
 
 ################# CHANNEL ################
 def add_noise(signal, SNR):
-    Var = 1 / (2 * pow(10.0, SNR_in_db / 10))
+    Var = 1 / (2 * R * pow(10.0, SNR_in_db / 10))
     sigma = pow(Var, 1 / 2)
     noise = np.random.normal(scale=sigma, size=(1, N))
     return signal + noise
@@ -57,7 +57,7 @@ for i in range(Times):
     codeword = polar_codes.encode(message, G)
     signal = codeword * (-2) + 1
     signal = add_noise(signal, SNR_in_db)
-    decoded_message = polar_codes.decode(signal, 30, frozen_indexes, B_N)
+    decoded_message = polar_codes.decode(signal, 60, frozen_indexes, B_N)
     error = (decoded_message != message).astype(np.float64)
     error_count += sum(error)
 
