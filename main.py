@@ -35,37 +35,37 @@ def func():
 
 
 if __name__ == '__main__':
-    ################ ENCODING ################
-    print("------------------ENCODING------------------")
-
-    message = polar_codes.random_message_with_frozen_bits(N, R, epsilon, frozen_indexes)
-    # Encode the message.
-    codeword = polar_codes.encode(message, G)
-
-    # BPSK
-    # Mapping 0 => +1, 1 => -1
-    signal = codeword * (-2) + 1
-
-    # Show the message and the corresponding codeword.
-    print('Message: \n', message)
-    print('Codeword:\n', codeword)
-    print('Signal:\n', signal)
-
-
-    ################# CHANNEL ################
-    signal = add_noise(signal, SNR_in_db)
-
-
-    ################ DECODING ################
-    print("------------------DECODING------------------")
-
-    decoded_message = polar_codes.decode(signal, 60, frozen_indexes, B_N)
-
-    print('Message: \n', message)
-    print('Decoded message: \n', decoded_message)
-
-    error = (decoded_message != message).astype(np.float64)
-    print('BER :', sum(error) / N)
+    # ################ ENCODING ################
+    # print("------------------ENCODING------------------")
+    #
+    # message = polar_codes.random_message_with_frozen_bits(N, R, epsilon, frozen_indexes)
+    # # Encode the message.
+    # codeword = polar_codes.encode(message, G)
+    #
+    # # BPSK
+    # # Mapping 0 => +1, 1 => -1
+    # signal = codeword * (-2) + 1
+    #
+    # # Show the message and the corresponding codeword.
+    # print('Message: \n', message)
+    # print('Codeword:\n', codeword)
+    # print('Signal:\n', signal)
+    #
+    #
+    # ################# CHANNEL ################
+    # signal = add_noise(signal, SNR_in_db)
+    #
+    #
+    # ################ DECODING ################
+    # print("------------------DECODING------------------")
+    #
+    # decoded_message = polar_codes.decode(signal, 60, frozen_indexes, B_N)
+    #
+    # print('Message: \n', message)
+    # print('Decoded message: \n', decoded_message)
+    #
+    # error = (decoded_message != message).astype(np.float64)
+    # print('BER :', sum(error) / N)
 
 
     ################# TEST ###################
