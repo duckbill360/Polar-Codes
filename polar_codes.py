@@ -40,12 +40,10 @@ def generate_G_N(N):
     return np.dot(B_N, nth_Kronecker_product) % 2
 
 
-def random_message_with_frozen_bits(N, R, epsilon):
+def random_message_with_frozen_bits(N, R, epsilon, frozen_indexes):
     # Randomly generate a message vector of size N.
     message = np.random.randint(2, size=N)
     message = message.astype(np.float64)  # convert dtype to float64
-
-    frozen_indexes = generate_frozen_set_indexes(N, R, epsilon)
 
     for i in range(len(frozen_indexes)):
         message[frozen_indexes[i]] = 0
@@ -77,6 +75,7 @@ def generate_frozen_set_indexes(N, R, epsilon):
 
 # The function generates the bit-reversed permutation matrix.
 def permutation_matrix(N):
+    print('called')
     # Initializing this matrix to an N-by-N all-zero matrix
     R = np.zeros((N, N))
 
@@ -89,13 +88,12 @@ def permutation_matrix(N):
 
 # This function computes the codeword: x = u * G_N
 # "message" should be a 1D (row) vector.
-def encode(message):
+def encode(message, G):
     # N is the length of the message
     N = message.size
-    G = generate_G_N(N)
 
     # Show the generator matrix.
-    print('Generator Matrix:\n', G)
+    # print('Generator Matrix:\n', G)
 
     codeword = np.dot(message, G) % 2       # Mod 2 to convert to the binary vector.
     # "codeword" should also be a 1D (row) vector
@@ -106,7 +104,7 @@ def encode(message):
 ######################## DECODING ########################
 # Belief-Propagation Decoding
 # "x" is a 1D vector.
-def decode(x, iteration_num, frozen_set_indexes):
+def decode(x, iteration_num, frozen_set_indexes, B_N):
     N = x.size                # code length
     n = int(np.log2(N))       # log2(N)
     L = np.zeros((N, n + 1))  # L message array
@@ -119,9 +117,8 @@ def decode(x, iteration_num, frozen_set_indexes):
         if i in frozen_set_indexes:
             LLR_R[i] = 100    # Set every element of index in frozen_set_indexes to 100
     # Bit-reversed permutation
-    B_N = permutation_matrix(N)
     LLR_R = np.dot(LLR_R, B_N)
-    print('LLR_R :', LLR_R)
+    # print('LLR_R :', LLR_R)
 
     L[:, n] = LLR_L     # L[:, n] is the channel side
     R[:, 0] = LLR_R     # R[:, 0] is the user side
@@ -145,23 +142,18 @@ def decode(x, iteration_num, frozen_set_indexes):
                 R[2 * j, i + 1] = BCB(R[j, i], R[j + N // 2, i], L[2 * j + 1, i + 1], type='+')
                 R[2 * j + 1, i + 1] = BCB(R[j + N // 2, i], R[j, i], L[2 * j, i + 1], type='=')
 
-    ############ L propagation
-    # (j, i) is the coordinate of the "BCB"
+    # Need an additional L propagation
+    # This operation is the same as above.
     for i in range(n - 1, -1, -1):  # i is the width counted from the left  (n-1)~0
         for j in range(N // 2):  # j is the depth counted from the top   0~(N/2 - 1)
             L[j, i] = BCB(L[2 * j, i + 1], L[2 * j + 1, i + 1], R[j + N // 2, i], type='+')
             L[j + N // 2, i] = BCB(L[2 * j + 1, i + 1], L[2 * j, i + 1], R[j, i], type='=')
 
-
-    print('L:\n', L)
-    print('R:\n', R)
-
     output = np.dot(L[:, 0], B_N)       # Permutation
-    codeword = output > 0
-    codeword = codeword.astype(int)
-    print(codeword)
+    message = output < 0
+    message = message.astype(np.float64)
 
-    return codeword
+    return message
 
 
 # x and y are floating-point numbers
