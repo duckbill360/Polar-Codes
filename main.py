@@ -31,5 +31,5 @@ print('Signal:\n', signal)
 
 ################ DECODING ################
 print("------------------DECODING------------------")
-polar_codes.decode(signal, 1, U)
+polar_codes.decode(signal, 0, U)
 

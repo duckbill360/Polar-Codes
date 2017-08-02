@@ -136,14 +136,22 @@ def decode(x, iteration_num, frozen_set_indexes):
         # (j, i) is the coordinate of the "BCB"
         for i in range(n - 1, -1, -1):      # i is the width counted from the left  (n-1)~0
             for j in range(N // 2):         # j is the depth counted from the top   0~(N/2 - 1)
-                L[j, i] = BCB(L[2 * j - 1, i + 1], L[2 * j, i + 1], R[j + N // 2, i], type='+')
-                L[j + N // 2, i] = BCB(L[2 * j, i + 1], L[2 * j - 1, i + 1], R[j, i], type='=')
+                L[j, i] = BCB(L[2 * j, i + 1], L[2 * j + 1, i + 1], R[j + N // 2, i], type='+')
+                L[j + N // 2, i] = BCB(L[2 * j + 1, i + 1], L[2 * j, i + 1], R[j, i], type='=')
 
         ############ R propagation
         for i in range(n - 1):          # 1 stage fewer than L propagation
             for j in range(N // 2):
                 R[2 * j, i + 1] = BCB(R[j, i], R[j + N // 2, i], L[2 * j + 1, i + 1], type='+')
                 R[2 * j + 1, i + 1] = BCB(R[j + N // 2, i], R[j, i], L[2 * j, i + 1], type='=')
+
+    ############ L propagation
+    # (j, i) is the coordinate of the "BCB"
+    for i in range(n - 1, -1, -1):  # i is the width counted from the left  (n-1)~0
+        for j in range(N // 2):  # j is the depth counted from the top   0~(N/2 - 1)
+            L[j, i] = BCB(L[2 * j, i + 1], L[2 * j + 1, i + 1], R[j + N // 2, i], type='+')
+            L[j + N // 2, i] = BCB(L[2 * j + 1, i + 1], L[2 * j, i + 1], R[j, i], type='=')
+
 
     print('L:\n', L)
     print('R:\n', R)
