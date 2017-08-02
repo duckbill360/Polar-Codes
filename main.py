@@ -4,7 +4,7 @@ import polar_codes
 import numpy as np
 
 ############### PARAMETERS ###############
-Times = 10
+Times = 2
 N = 1024        # code length
 R = 0.5         # code rate
 epsilon = 0.45   # cross-over probability for a BEC
@@ -97,8 +97,10 @@ if __name__ == '__main__':
         error_count += result.get()
 
     BER = error_count / (N * len(results))
+    print('Error count :', error_count)
+    print('Total bits :', N * len(results))
     print('BER :', BER)
 
     stop = timeit.default_timer()
-    print('run time :', stop - start)
-    ###########
+    print('\nRun time :', stop - start)
+
