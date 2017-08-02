@@ -41,9 +41,6 @@ def add_noise(signal, SNR):
 
 ################ DECODING ################
 print("------------------DECODING------------------")
-import timeit
-
-start = timeit.default_timer()
 
 decoded_message = polar_codes.decode(signal, 60, frozen_indexes, B_N)
 
@@ -52,9 +49,7 @@ print('Decoded message: \n', decoded_message)
 
 error = (decoded_message != message).astype(np.float64)
 print('BER :', sum(error) / N)
-stop = timeit.default_timer()
 
-print(stop - start)
 
 ################# TEST ###################
 error_count = 0
