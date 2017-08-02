@@ -28,7 +28,7 @@ def generate_G_N(N):
     n = int(np.log2(N))
     F_2 = np.array([[1, 0],
                     [1, 1]])
-    B_N = permutation_matrix(N)
+    B_N = permutation_matrix(N)     # B_N is a symmetric
 
     # The nth Kronecker product of F_2
     # Initializing this matrix to a "2D" matrix with only 1 element
@@ -38,6 +38,41 @@ def generate_G_N(N):
 
     # Return B_N * F_2**n
     return np.dot(B_N, nth_Kronecker_product) % 2
+
+
+def random_message_with_frozen_bits(N, R, epsilon):
+    # Randomly generate a message vector of size N.
+    message = np.random.randint(2, size=N)
+    message = message.astype(np.float64)  # convert dtype to float64
+
+    frozen_indexes = generate_frozen_set_indexes(N, R, epsilon)
+
+    for i in range(len(frozen_indexes)):
+        message[frozen_indexes[i]] = 0
+
+    return message
+
+
+# This function tells the positions (indexes) of the frozen bit.
+def generate_frozen_set_indexes(N, R, epsilon):
+    U = [Z_W(i + 1, N, eps=epsilon) for i in range(N)]
+    # print('U :', U)
+
+    U_sorted = U.copy()     # Use .copy() to actually "copy" the list
+    U_sorted.sort(reverse=True)  # Descending order
+    # print('U_sorted :', U_sorted)
+
+    index = int(N * R - 1)
+    threshold = U_sorted[index]
+
+    index_set = []
+    for i in range(N):
+        if U[i] >= threshold:
+            index_set.append(i)
+
+    print('Frozen indexes :', index_set)
+
+    return index_set
 
 
 # The function generates the bit-reversed permutation matrix.
@@ -70,12 +105,38 @@ def encode(message):
 
 ######################## DECODING ########################
 # Belief-Propagation Decoding
-# "message" is a 1D vector.
-def decode(message, iteration_num):
-    N = message.size          # code length
+# "x" is a 1D vector.
+def decode(x, iteration_num, frozen_set_indexes):
+    N = x.size                # code length
     n = int(np.log2(N))       # log2(N)
-    L = np.zeros((N, n + 1))
-    R = np.zeros((N, n))
+    L = np.zeros((N, n + 1))  # L message array
+    R = np.zeros((N, n + 1))  # R message array
+
+    num_BCBs = N // 2         # the number of BCBs in a stage
+    num_BCB_stages = n        # the number of stages of BCBs
+
+    # Initialization
+    LLR_L = x
+    LLR_R = np.zeros(N)       # 1D all-zero vector
+    for i in range(N):
+        if i in frozen_set_indexes:
+            LLR_R[i] = 100    # Set every element of index in frozen_set_indexes to 100
+    # Bit-reversed permutation
+    B_N = permutation_matrix(N)
+    LLR_R = np.dot(LLR_R, B_N)
+    print('LLR_R :', LLR_R)
+
+    L[:, n] = LLR_L     # L[:, n] is the channel side
+    R[:, 0] = LLR_R     # R[:, 0] is the user side
+    # These 2 can not be changed during iteration.
+    # END of initialization
+
+    # Message-Passing Algorithm
+    for i in range(iteration_num):
+        pass
+        # L propagation
+
+        # R propagation
 
     return
 
@@ -93,6 +154,4 @@ def BCB(A, B, C, type):
         return f(A, B + C)
     elif type == '=':       # The lower branch
         return f(C, B) + A
-
-
 

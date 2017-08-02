@@ -5,22 +5,16 @@ import numpy as np
 
 ############### PARAMETERS ###############
 N = 8      # code length
-epsilon = 0.5   # cross-over probability for a BEC
 R = 0.5    # code rate
+epsilon = 0.5   # cross-over probability for a BEC
+
 
 
 ################ ENCODING ################
 print("------------------ENCODING------------------")
 
-# Randomly generate a message vector of size N.
-message = np.random.randint(2, size=N)
-message = message.astype(np.float64)    # convert dtype to float64
-
-# Determine the frozen set.
-U = [polar_codes.Z_W(i + 1, N, eps=epsilon) for i in range(N)]
-# The parameter i, N for W_N() should be no less than 1
-print('U =', U)
-
+message = polar_codes.random_message_with_frozen_bits(N, R, epsilon)
+U = polar_codes.generate_frozen_set_indexes(N, R, epsilon)
 # Encode the message.
 codeword = polar_codes.encode(message)
 
@@ -36,6 +30,6 @@ print('Codeword:\n', codeword)
 
 
 ################ DECODING ################
-print("\n\n------------------DECODING------------------")
-
+print("------------------DECODING------------------")
+polar_codes.decode(codeword, 50, U)
 
