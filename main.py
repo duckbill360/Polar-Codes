@@ -8,7 +8,7 @@ Times = 50
 N = 1024        # code length
 R = 0.5         # code rate
 epsilon = 0.45   # cross-over probability for a BEC
-SNR_in_db = 1.0
+SNR_in_db = 3.5
 
 Var = 1 / (2 * R * pow(10.0, SNR_in_db / 10))
 sigma = pow(Var, 1 / 2)
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     results = []
 
     for j in range(Times):      # The number of iterations for each cpu core
-        for i in range(0, 4):        # The number of cpu cores
+        for i in range(0, cpus):        # The number of cpu cores
             result = pool.apply_async(func)
             results.append(result)
 
