@@ -4,16 +4,20 @@ import polar_codes
 import numpy as np
 
 ############### PARAMETERS ###############
-Times = 10
+Times = 20
 N = 1024        # code length
 R = 0.5         # code rate
 epsilon = 0.45   # cross-over probability for a BEC
 SNR_in_db = 1.5
 
+Var = 1 / (2 * R * pow(10.0, SNR_in_db / 10))
+sigma = pow(Var, 1 / 2)
+
 B_N = polar_codes.permutation_matrix(N)
 frozen_indexes = polar_codes.generate_frozen_set_indexes(N, R, epsilon)
 G = polar_codes.generate_G_N(N)
 
+count = 0
 
 def add_noise(signal, SNR):
     Var = 1 / (2 * R * pow(10.0, SNR_in_db / 10))
@@ -23,12 +27,16 @@ def add_noise(signal, SNR):
 
 
 def func():
+    global count
+    count += 1
+    print(count)
+
     message = polar_codes.random_message_with_frozen_bits(N, R, epsilon, frozen_indexes)
     print('message :', message)
     codeword = polar_codes.encode(message, G)
     signal = codeword * (-2) + 1
     signal = add_noise(signal, SNR_in_db)
-    decoded_message = polar_codes.decode(signal, 60, frozen_indexes, B_N)
+    decoded_message = polar_codes.decode(signal, 60, frozen_indexes, B_N, sigma)
     error = (decoded_message != message) * 1.0
 
     return sum(error)
@@ -86,7 +94,7 @@ if __name__ == '__main__':
     results = []
 
     for j in range(Times):      # The number of iterations for each cpu core
-        for i in range(0, cpus):        # The number of cpu cores
+        for i in range(0, 4):        # The number of cpu cores
             result = pool.apply_async(func)
             results.append(result)
 
@@ -102,5 +110,5 @@ if __name__ == '__main__':
     print('BER :', BER)
 
     stop = timeit.default_timer()
-    print('\nRun time :', stop - start, 'seconds')
+    print('\nRun time :', (stop - start) // 60, 'minutes,', (stop - start) % 60, 'seconds')
 

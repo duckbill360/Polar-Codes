@@ -101,18 +101,19 @@ def encode(message, G):
 ######################## DECODING ########################
 # Belief-Propagation Decoding
 # "x" is a 1D vector.
-def decode(x, iteration_num, frozen_set_indexes, B_N):
+def decode(x, iteration_num, frozen_set_indexes, B_N, sigma):
     N = x.size                # code length
     n = int(np.log2(N))       # log2(N)
     L = np.zeros((N, n + 1))  # L message array
     R = np.zeros((N, n + 1))  # R message array
 
     # Initialization
-    LLR_L = x                 # TODO These values should be altered.
+    LLR_L = x * 2 / pow(sigma, 2)                # TODO These values should be altered.
     LLR_R = np.zeros(N)       # 1D all-zero vector
-    for i in range(N):
-        if i in frozen_set_indexes:
-            LLR_R[i] = 100    # Set every element of index in frozen_set_indexes to 100
+
+    for i in frozen_set_indexes:
+        LLR_R[i] = 1000    # Set every element of index in frozen_set_indexes to 1000
+
     # Bit-reversed permutation
     LLR_R = np.dot(LLR_R, B_N)
     # print('LLR_R :', LLR_R)
