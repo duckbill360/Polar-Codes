@@ -29,7 +29,7 @@ def func():
     signal = codeword * (-2) + 1
     signal = add_noise(signal, SNR_in_db)
     decoded_message = polar_codes.decode(signal, 60, frozen_indexes, B_N)
-    error = (decoded_message != message).astype(np.float64)
+    error = (decoded_message != message) * 1.0
 
     return sum(error)
 
