@@ -75,9 +75,9 @@ if __name__ == '__main__':
 
     # Calling func() one time means doing encoding and decoding one time.
 
-    multiprocessing.freeze_support()
+    multiprocessing.freeze_support()    # To avoid RunTimeError
     pool = multiprocessing.Pool()
-    cpus = multiprocessing.cpu_count()
+    cpus = multiprocessing.cpu_count()  # Get the number of cpu cores
 
     ###########
     import timeit
@@ -102,5 +102,5 @@ if __name__ == '__main__':
     print('BER :', BER)
 
     stop = timeit.default_timer()
-    print('\nRun time :', stop - start)
+    print('\nRun time :', stop - start, 'seconds')
 

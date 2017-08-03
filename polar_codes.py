@@ -167,9 +167,8 @@ def f(x, y):
 # Basic Computational Block
 # "type" specifies the operation.
 # The order of A, B, C should be considered carefully.
-def BCB(A, B, C, type):
-    if type == '+':         # The upper branch
-        return f(A, B + C)
-    elif type == '=':       # The lower branch
-        return f(C, B) + A
-
+# def BCB(A, B, C, type):
+#     if type == '+':         # The upper branch
+#         return f(A, B + C)
+#     elif type == '=':       # The lower branch
+#         return f(C, B) + A
