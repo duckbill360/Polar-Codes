@@ -64,7 +64,7 @@ if __name__ == '__main__':
     # print('Message: \n', message)
     # print('Decoded message: \n', decoded_message)
     #
-    # error = (decoded_message != message).astype(np.float64)
+    # error = (decoded_message != message) * 1.0
     # print('BER :', sum(error) / N)
 
 
