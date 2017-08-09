@@ -129,7 +129,8 @@ def decode(x, iteration_num, frozen_set_indexes, B_N, sigma):
 
         ############ L propagation
         # (j, i) is the coordinate of the "BCB"
-        for i in range(n - 1, -1, -1):      # i is the width counted from the left  (n-1)~0
+        # We can ignore the L[:, 0] here.
+        for i in range(n - 1, 0, -1):      # i is the width counted from the left  (n-1)~0
             for j in range(N // 2):         # j is the depth counted from the top   0~(N/2 - 1)
                 # L[j, i] = BCB(L[2 * j, i + 1], L[2 * j + 1, i + 1], R[j + N // 2, i], type='+')
                 # L[j + N // 2, i] = BCB(L[2 * j + 1, i + 1], L[2 * j, i + 1], R[j, i], type='=')
@@ -137,6 +138,7 @@ def decode(x, iteration_num, frozen_set_indexes, B_N, sigma):
                 L[j + N // 2, i] = f(R[j, i], L[2 * j, i + 1]) + L[2 * j + 1, i + 1]
 
         ############ R propagation
+        # R[, 0] shouldn't be overwritten.
         for i in range(n - 1):          # 1 stage fewer than L propagation
             for j in range(N // 2):
                 # R[2 * j, i + 1] = BCB(R[j, i], R[j + N // 2, i], L[2 * j + 1, i + 1], type='+')
@@ -144,8 +146,9 @@ def decode(x, iteration_num, frozen_set_indexes, B_N, sigma):
                 R[2 * j, i + 1] = f(R[j, i], R[j + N // 2, i] + L[2 * j + 1, i + 1])
                 R[2 * j + 1, i + 1] = f(L[2 * j, i + 1], R[j, i]) + R[j + N // 2, i]
 
-    # Need an additional L propagation
-    # This operation is the same as above.
+    # The last L propagation
+    # This operation is a little different from the above.
+    # L[:, 0] should be compute here.
     for i in range(n - 1, -1, -1):  # i is the width counted from the left  (n-1)~0
         for j in range(N // 2):  # j is the depth counted from the top   0~(N/2 - 1)
             # L[j, i] = BCB(L[2 * j, i + 1], L[2 * j + 1, i + 1], R[j + N // 2, i], type='+')
@@ -156,6 +159,10 @@ def decode(x, iteration_num, frozen_set_indexes, B_N, sigma):
     output = np.dot(L[:, 0], B_N)       # Permutation
     message = output < 0
     message = message.astype(np.float64)
+
+    # Force the frozen bits to be '0's.
+    for i in frozen_set_indexes:
+        message[i] = 0
 
     return message
 

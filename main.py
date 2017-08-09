@@ -8,9 +8,9 @@ Times = 50
 N = 1024        # code length
 R = 0.5         # code rate
 epsilon = 0.45   # cross-over probability for a BEC
-SNR_in_db = 3.5
+SNR_in_db = 1.5
 
-Var = 1 / (2 * R * pow(10.0, SNR_in_db / 10))
+Var = 1 / (2 * pow(10.0, SNR_in_db / 10))
 sigma = pow(Var, 1 / 2)
 
 B_N = polar_codes.permutation_matrix(N)
