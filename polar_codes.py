@@ -54,7 +54,6 @@ def random_message_with_frozen_bits(N, R, epsilon, frozen_indexes):
 # This function tells the positions (indexes) of the frozen bit.
 def generate_frozen_set_indexes(N, R, epsilon):
     U = [Z_W(i + 1, N, eps=epsilon) for i in range(N)]
-    # print('U :', U)
 
     U_sorted = U.copy()     # Use .copy() to actually "copy" the list
     U_sorted.sort(reverse=True)  # Descending order
@@ -88,9 +87,6 @@ def permutation_matrix(N):
 def encode(message, G):
     # N is the length of the message
     N = message.size
-
-    # Show the generator matrix.
-    # print('Generator Matrix:\n', G)
 
     codeword = np.dot(message, G) % 2       # Mod 2 to convert to the binary vector.
     # "codeword" should also be a 1D (row) vector
