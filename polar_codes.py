@@ -164,13 +164,3 @@ def decode(x, iteration_num, frozen_set_indexes, B_N, sigma):
 # x and y are floating-point numbers
 def f(x, y):
     return np.sign(x) * np.sign(y) * np.minimum(np.absolute(x), np.absolute(y))
-
-
-# Basic Computational Block
-# "type" specifies the operation.
-# The order of A, B, C should be considered carefully.
-# def BCB(A, B, C, type):
-#     if type == '+':         # The upper branch
-#         return f(A, B + C)
-#     elif type == '=':       # The lower branch
-#         return f(C, B) + A
