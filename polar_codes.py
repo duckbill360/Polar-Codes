@@ -57,7 +57,6 @@ def generate_frozen_set_indexes(N, R, epsilon):
 
     U_sorted = U.copy()     # Use .copy() to actually "copy" the list
     U_sorted.sort(reverse=True)  # Descending order
-    # print('U_sorted :', U_sorted)
 
     index = int(N * R - 1)
     threshold = U_sorted[index]
@@ -112,7 +111,6 @@ def decode(x, iteration_num, frozen_set_indexes, B_N, sigma):
 
     # Bit-reversed permutation
     LLR_R = np.dot(LLR_R, B_N)
-    # print('LLR_R :', LLR_R)
 
     L[:, n] = LLR_L     # L[:, n] is the channel side
     R[:, 0] = LLR_R     # R[:, 0] is the user side
@@ -120,7 +118,6 @@ def decode(x, iteration_num, frozen_set_indexes, B_N, sigma):
     # END of initialization
 
     # Message-Passing Algorithm
-
     for k in range(iteration_num):
 
         ############ L propagation
