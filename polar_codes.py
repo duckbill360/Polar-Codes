@@ -101,6 +101,9 @@ def decode(x, iteration_num, frozen_set_indexes, B_N, sigma):
     n = int(np.log2(N))       # log2(N)
     L = np.zeros((N, n + 1))  # L message array
     R = np.zeros((N, n + 1))  # R message array
+    alpha = 1.0
+    beta = 0.5
+    threshold = 5.0
 
     # Initialization
     LLR_L = x * 2 / pow(sigma, 2)
@@ -121,12 +124,22 @@ def decode(x, iteration_num, frozen_set_indexes, B_N, sigma):
     for k in range(iteration_num):
 
         ############ L propagation
-        # (j, i) is the coordinate of the "BCB"
+        # j moves vertically, i moves horizontally
         # We can ignore the L[:, 0] here.
         for i in range(n - 1, 0, -1):      # i is the width counted from the left  (n-1)~0
             for j in range(N // 2):         # j is the depth counted from the top   0~(N/2 - 1)
                 L[j, i] = f(L[2 * j, i + 1], L[2 * j + 1, i + 1] + R[j + N // 2, i])
                 L[j + N // 2, i] = f(R[j, i], L[2 * j, i + 1]) + L[2 * j + 1, i + 1]
+
+            ########################################################################
+            # These lines of code are for the "Expediting" BP decoder.
+            # if i == n - 1:
+            #     for j in range(N // 2):
+            #         if R[j + N // 2, i] > threshold:
+            #             L[j, i] = alpha * L[j, i] + beta * R[j + N // 2, i]
+            #         if R[j, i] > threshold:
+            #             L[j + N // 2, i] = alpha * L[j + N // 2, i] + beta * R[j, i]
+            ########################################################################
 
         ############ R propagation
         # R[, 0] shouldn't be overwritten.

@@ -4,7 +4,7 @@ import polar_codes
 import numpy as np
 
 ############### PARAMETERS ###############
-Times = 10
+Times = 50
 N = 1024        # code length
 R = 0.5         # code rate
 epsilon = 0.45   # cross-over probability for a BEC
@@ -33,7 +33,6 @@ def func():
     print(count)
 
     message = polar_codes.random_message_with_frozen_bits(N, R, epsilon, frozen_indexes)
-    print('message :', message)
     codeword = polar_codes.encode(message, G)
     signal = codeword * (-2) + 1
     signal = add_noise(signal, SNR_in_db)
