@@ -4,11 +4,11 @@ import polar_codes
 import numpy as np
 
 ############### PARAMETERS ###############
-Times = 10
+Times = 50
 N = 1024        # code length
 R = 0.5         # code rate
 epsilon = 0.45   # cross-over probability for a BEC
-SNR_in_db = 1.5
+SNR_in_db = 1.0
 
 Var = 1 / (2 * pow(10.0, SNR_in_db / 10))
 sigma = pow(Var, 1 / 2)
@@ -21,8 +21,8 @@ count = 0
 
 
 def add_noise(signal, SNR):
-    Var = 1 / (2 * R * pow(10.0, SNR_in_db / 10))
-    sigma = pow(Var, 1 / 2)
+    var = 1 / (2 * R * pow(10.0, SNR_in_db / 10))
+    sigma = pow(var, 1 / 2)
     noise = np.random.normal(scale=sigma, size=(1, N))
     return signal + noise
 
