@@ -4,7 +4,7 @@ import polar_codes
 import numpy as np
 
 ############### PARAMETERS ###############
-Times = 1
+Times = 10
 N = 1024        # code length
 R = 0.5         # code rate
 epsilon = 0.45   # cross-over probability for a BEC
