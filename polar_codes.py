@@ -45,8 +45,8 @@ def random_message_with_frozen_bits(N, R, epsilon, frozen_indexes):
     message = np.random.randint(2, size=N)
     message = message.astype(np.float64)  # convert dtype to float64
 
-    for i in range(len(frozen_indexes)):
-        message[frozen_indexes[i]] = 0
+    for i in frozen_indexes:
+        message[i] = 0
 
     return message
 
@@ -110,7 +110,7 @@ def decode(x, iteration_num, frozen_set_indexes, B_N, sigma):
     LLR_R = np.zeros(N)       # 1D all-zero vector
 
     for i in frozen_set_indexes:
-        LLR_R[i] = 1000    # Set every element of index in frozen_set_indexes to 1000
+        LLR_R[i] = 1000000    # Set every element of index in frozen_set_indexes to 1000
 
     # Bit-reversed permutation
     LLR_R = np.dot(LLR_R, B_N)
