@@ -102,7 +102,7 @@ def decode(x, iteration_num, frozen_set_indexes, B_N, sigma):
     L = np.zeros((N, n + 1))  # L message array
     R = np.zeros((N, n + 1))  # R message array
     alpha = 1.0
-    beta = 0.5
+    beta = 0.01
     threshold = 5.0
 
     # Initialization
@@ -133,12 +133,12 @@ def decode(x, iteration_num, frozen_set_indexes, B_N, sigma):
 
             ########################################################################
             # These lines of code are for the "Expediting" BP decoder.
-            # if i == n - 1:
-            #     for j in range(N // 2):
-            #         if np.abs(R[j + N // 2, i]) > threshold:
-            #             L[j, i] = alpha * L[j, i] + beta * R[j + N // 2, i]
-            #         if np.abs(R[j, i]) > threshold:
-            #             L[j + N // 2, i] = alpha * L[j + N // 2, i] + beta * R[j, i]
+            if i == n - 1:
+                for j in range(N // 2):
+                    if np.abs(R[j + N // 2, n - 1]) > threshold:
+                        L[j, n - 1] = alpha * L[j, n - 1] + beta * R[j + N // 2, n - 1]
+                    if np.abs(R[j, n - 1]) > threshold:
+                        L[j + N // 2, n - 1] = alpha * L[j + N // 2, n - 1] + beta * R[j, n - 1]
             ########################################################################
 
         ############ R propagation

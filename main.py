@@ -110,3 +110,8 @@ if __name__ == '__main__':
     stop = timeit.default_timer()
     print('\nRun time :', (stop - start) // 60, 'minutes,', (stop - start) % 60, 'seconds')
 
+    # Play a sound when the execution is finished.
+    import winsound
+    duration = 1000  # millisecond
+    freq = 440  # Hz
+    winsound.Beep(freq, duration)
