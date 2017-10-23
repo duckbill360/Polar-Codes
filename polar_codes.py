@@ -127,34 +127,40 @@ def decode(x, iteration_num, frozen_set_indexes, B_N, sigma):
         # j moves vertically, i moves horizontally
         # We can ignore the L[:, 0] here.
         for i in range(n - 1, 0, -1):      # i is the width counted from the left  (n-1)~0
-            for j in range(N // 2):         # j is the depth counted from the top   0~(N/2 - 1)
-                L[j, i] = f(L[2 * j, i + 1], L[2 * j + 1, i + 1] + R[j + N // 2, i])
-                L[j + N // 2, i] = f(R[j, i], L[2 * j, i + 1]) + L[2 * j + 1, i + 1]
+            # for j in range(N // 2):         # j is the depth counted from the top   0~(N/2 - 1)
+            #     L[j, i] = f(L[2 * j, i + 1], L[2 * j + 1, i + 1] + R[j + N // 2, i])
+            #     L[j + N // 2, i] = f(R[j, i], L[2 * j, i + 1]) + L[2 * j + 1, i + 1]
+            L[:N // 2, i] = f(L[: N: 2, i + 1], L[1: N: 2, i + 1] + R[N // 2:, i])
+            L[N // 2:, i] = f(R[: N // 2, i], L[: N: 2, i + 1]) + L[1: N: 2, i + 1]
 
             ########################################################################
             # These lines of code are for the "Expediting" BP decoder.
-            if i == n - 1:
-                for j in range(N // 2):
-                    if np.abs(R[j + N // 2, n - 1]) > threshold:
-                        L[j, n - 1] = alpha * L[j, n - 1] + beta * R[j + N // 2, n - 1]
-                    if np.abs(R[j, n - 1]) > threshold:
-                        L[j + N // 2, n - 1] = alpha * L[j + N // 2, n - 1] + beta * R[j, n - 1]
+            # if i == n - 1:
+            #     for j in range(N // 2):
+            #         if np.abs(R[j + N // 2, n - 1]) > threshold:
+            #             L[j, n - 1] = alpha * L[j, n - 1] + beta * R[j + N // 2, n - 1]
+            #         if np.abs(R[j, n - 1]) > threshold:
+            #             L[j + N // 2, n - 1] = alpha * L[j + N // 2, n - 1] + beta * R[j, n - 1]
             ########################################################################
 
         ############ R propagation
         # R[, 0] shouldn't be overwritten.
         for i in range(n - 1):             # 1 stage fewer than L propagation
-            for j in range(N // 2):
-                R[2 * j, i + 1] = f(R[j, i], R[j + N // 2, i] + L[2 * j + 1, i + 1])
-                R[2 * j + 1, i + 1] = f(L[2 * j, i + 1], R[j, i]) + R[j + N // 2, i]
+            # for j in range(N // 2):
+            #     R[2 * j, i + 1] = f(R[j, i], R[j + N // 2, i] + L[2 * j + 1, i + 1])
+            #     R[2 * j + 1, i + 1] = f(L[2 * j, i + 1], R[j, i]) + R[j + N // 2, i]
+            R[: N: 2, i + 1] = f(R[: N // 2, i], R[N // 2:, i] + L[1: N: 2, i + 1])
+            R[1: N: 2, i + 1] = f(L[: N: 2, i + 1], R[: N // 2, i]) + R[N // 2:, i]
 
     # The last L propagation
     # This operation is a little different from the above.
     # L[:, 0] should be compute here.
     for i in range(n - 1, -1, -1):  # i is the width counted from the left  (n-1)~0
-        for j in range(N // 2):  # j is the depth counted from the top   0~(N/2 - 1)
-            L[j, i] = f(L[2 * j, i + 1], L[2 * j + 1, i + 1] + R[j + N // 2, i])
-            L[j + N // 2, i] = f(R[j, i], L[2 * j, i + 1]) + L[2 * j + 1, i + 1]
+        # for j in range(N // 2):  # j is the depth counted from the top   0~(N/2 - 1)
+        #     L[j, i] = f(L[2 * j, i + 1], L[2 * j + 1, i + 1] + R[j + N // 2, i])
+        #     L[j + N // 2, i] = f(R[j, i], L[2 * j, i + 1]) + L[2 * j + 1, i + 1]
+        L[:N // 2, i] = f(L[: N: 2, i + 1], L[1: N: 2, i + 1] + R[N // 2:, i])
+        L[N // 2:, i] = f(R[: N // 2, i], L[: N: 2, i + 1]) + L[1: N: 2, i + 1]
 
     output = np.dot(L[:, 0], B_N)       # Permutation
     message = output < 0
