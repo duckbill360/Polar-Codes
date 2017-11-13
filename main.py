@@ -16,6 +16,10 @@ sigma = pow(Var, 1 / 2)
 B_N = polar_codes.permutation_matrix(N)
 frozen_indexes = polar_codes.generate_frozen_set_indexes(N, R, epsilon)
 G = polar_codes.generate_G_N(N)
+alpha = np.load('alpha.npy')
+beta = np.load('beta.npy')
+alpha = np.squeeze(alpha, axis=1)
+beta = np.squeeze(beta, axis=1)
 
 count = 0
 
@@ -34,7 +38,7 @@ def func():
     codeword = polar_codes.encode(message, G)
     signal = codeword * (-2) + 1
     signal = add_noise(signal)
-    decoded_message = polar_codes.decode(signal, 120, frozen_indexes, B_N, sigma)
+    decoded_message = polar_codes.decode(signal, 120, frozen_indexes, B_N, sigma, alpha, beta)
     error = (decoded_message != message) * 1.0
 
     return sum(error)
