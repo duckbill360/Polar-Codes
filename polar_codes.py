@@ -84,9 +84,6 @@ def permutation_matrix(N):
 # This function computes the codeword: x = u * G_N
 # "message" should be a 1D (row) vector.
 def encode(message, G):
-    # N is the length of the message
-    N = message.size
-
     codeword = np.dot(message, G) % 2       # Mod 2 to convert to the binary vector.
     # "codeword" should also be a 1D (row) vector
 
@@ -135,9 +132,9 @@ def decode(x, iteration_num, frozen_set_indexes, B_N, sigma, alpha, beta):
 
             ########################################################################
             # These lines of code are for the "Expediting" BP decoder.
-            # if i == n - 1:
-            #     L[:N // 2, i] = alpha[k, :N // 2] * L[:N // 2, i] + beta[k, N // 2:] * R[N // 2:, i]
-            #     L[N // 2:, i] = alpha[k, N // 2:] * L[N // 2:, i] + beta[k, :N // 2] * R[:N // 2, i]
+            if i == n - 1:
+                L[:N // 2, i] = alpha[k, :N // 2] * L[:N // 2, i] + beta[k, N // 2:] * R[N // 2:, i]
+                L[N // 2:, i] = alpha[k, N // 2:] * L[N // 2:, i] + beta[k, :N // 2] * R[:N // 2, i]
             ########################################################################
 
     output = np.dot(L[:, 0], B_N)       # Permutation

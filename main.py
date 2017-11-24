@@ -8,8 +8,7 @@ Times = 200      # i7 -> 50 : 10'25
 N = 1024        # code length
 R = 0.5         # code rate
 epsilon = 0.45   # cross-over probability for a BEC
-SNR_in_db = 1.5
-
+SNR_in_db = 2.5
 Var = 1 / (2 * R * pow(10.0, SNR_in_db / 10.0))
 sigma = pow(Var, 1 / 2)
 
@@ -20,6 +19,9 @@ alpha = np.load('alpha.npy')
 beta = np.load('beta.npy')
 alpha = np.squeeze(alpha, axis=1)
 beta = np.squeeze(beta, axis=1)
+
+print(alpha)
+print(beta)
 
 count = 0
 
@@ -38,7 +40,7 @@ def func():
     codeword = polar_codes.encode(message, G)
     signal = codeword * (-2) + 1
     signal = add_noise(signal)
-    decoded_message = polar_codes.decode(signal, 120, frozen_indexes, B_N, sigma, alpha, beta)
+    decoded_message = polar_codes.decode(signal, 2, frozen_indexes, B_N, sigma, alpha, beta)
     error = (decoded_message != message) * 1.0
 
     return sum(error)
